@@ -71,13 +71,19 @@ var actors = ["Chris Farley", "Jim Carrey", "Will Smith", "Martin Lawrence", "Br
       	  	//creating and storing an image tag
       	  	var actorImage = $("<img>");
       	  	//setting src attribute of images to property of result item
-      	  	actorImage.attr("src", results[i].images.fixed_height.url);
+      	  	actorImage.attr({src: results[i].images.fixed_height_still.url, 
+                  "data-still": results[i].images.fixed_height_still.url, 
+                  "data-animate:": results[i].images.fixed_height.url, 
+                  "data-state": "still"});
+                  //add a class to each image
+                  actorImage.addClass("gif");
+                  // ORIGINAL CODEactorImage.attr("src", results[i].images.fixed_height.url);
 
       	  	//appending the image and paragraph to the div
       	  	actorDiv.append(actorImage);
       	  	actorDiv.append(p);
 
-      	  	//
+      	  	//in div with ID #actors prepend each of the images as they loop through
 
       	  	$("#actors").prepend(actorDiv);
 
@@ -86,5 +92,5 @@ var actors = ["Chris Farley", "Jim Carrey", "Will Smith", "Martin Lawrence", "Br
       	  }
       	});
       }
-      //listen for a click on element with class .actor and run function
+      //listen for a click on the page and in element with class .actor run a function
       $(document).on("click", ".actor", displayActorInfo);
