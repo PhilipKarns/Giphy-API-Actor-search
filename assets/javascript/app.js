@@ -37,3 +37,54 @@ var actors = ["Chris Farley", "Jim Carrey", "Will Smith", "Martin Lawrence", "Br
       	//run function to show the new button at the end of the array
       	addButtons();
       });
+
+      // send an alert for the actor's name
+      function displayActorInfo() {
+      	//getting data attribute value of the button clicked
+      	var actorName = $(this).attr("data-name")
+      	console.log(actorName);
+      	//searching the Giphy APi for the name in the data attribute
+      	var queryURL = "http://api.giphy.com/v1/gifs/search?q=" +
+        actorName + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+        //performing Ajax GET request
+      	$.ajax({
+      	  url: queryURL,
+      	  method: "GET"
+      	}).done(function(response) {
+      	  console.log(queryURL);
+      	  //storing results from API response in a variable
+      	  var results = response.data;
+      	  console.log(results);
+
+      	  $("#actors").empty();
+
+      	  //looping through each result item
+      	  for (i = 0; i < results.length; i++) {
+      	  	
+      	  	//creating a div for each item
+      	  	var actorDiv = $("<div>");
+
+      	  	//creating a paragraph to store each rating
+      	  	var p = $("<p>").text("Rating: " + results[i].rating);
+
+      	  	//creating and storing an image tag
+      	  	var actorImage = $("<img>");
+      	  	//setting src attribute of images to property of result item
+      	  	actorImage.attr("src", results[i].images.fixed_height.url);
+
+      	  	//appending the image and paragraph to the div
+      	  	actorDiv.append(actorImage);
+      	  	actorDiv.append(p);
+
+      	  	//
+
+      	  	$("#actors").prepend(actorDiv);
+
+
+
+      	  }
+      	});
+      }
+      //listen for a click on element with class .actor and run function
+      $(document).on("click", ".actor", displayActorInfo);
