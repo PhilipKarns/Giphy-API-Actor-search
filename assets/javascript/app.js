@@ -44,7 +44,7 @@ var actors = ["Chris Farley", "Jim Carrey", "Will Smith", "Martin Lawrence", "Br
       	var actorName = $(this).attr("data-name")
       	console.log(actorName);
       	//searching the Giphy APi for the name in the data attribute
-      	var queryURL = "http://api.giphy.com/v1/gifs/search?q=" +
+      	var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
         actorName + "&api_key=dc6zaTOxFJmzC&limit=10";
 
         //performing Ajax GET request
