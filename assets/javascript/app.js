@@ -21,8 +21,9 @@ var actors = ["Chris Farley", "Jim Carrey", "Will Smith", "Martin Lawrence", "Br
       		newButton.text(actors[i]);
       		//append each button at the end
       		$("#actorButtons").append(newButton);
-      	}
-      }
+      	} //loop end
+      } //addButtons function end
+
       //display the initial list of movies
       addButtons();
 
@@ -36,27 +37,30 @@ var actors = ["Chris Farley", "Jim Carrey", "Will Smith", "Martin Lawrence", "Br
       	actors.push(newActor);
       	//run function to show the new button at the end of the array
       	addButtons();
-      });
+      }); //click function end
 
       // send an alert for the actor's name
       function displayActorInfo() {
       	//getting data attribute value of the button clicked
       	var actorName = $(this).attr("data-name")
       	console.log(actorName);
-      	//searching the Giphy APi for the name in the data attribute
+      	
+            //searching the Giphy APi for the name in the data attribute
       	var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
         actorName + "&api_key=dc6zaTOxFJmzC&limit=10";
 
-        //performing Ajax GET request
+            //performing Ajax GET request and run function for response after GET is done
       	$.ajax({
       	  url: queryURL,
       	  method: "GET"
       	}).done(function(response) {
       	  console.log(queryURL);
-      	  //storing results from API response in a variable
+      	  
+              //storing results from API response in a variable
       	  var results = response.data;
       	  console.log(results);
 
+              //empty #actors div before loop to clear previous gifs
       	  $("#actors").empty();
 
       	  //looping through each result item
@@ -70,27 +74,65 @@ var actors = ["Chris Farley", "Jim Carrey", "Will Smith", "Martin Lawrence", "Br
 
       	  	//creating and storing an image tag
       	  	var actorImage = $("<img>");
-      	  	//setting src attribute of images to property of result item
-      	  	actorImage.attr({src: results[i].images.fixed_height_still.url, 
-                  "data-still": results[i].images.fixed_height_still.url, 
-                  "data-animate:": results[i].images.fixed_height.url, 
-                  "data-state": "still"});
-                  //add a class to each image
-                  actorImage.addClass("gif");
-                  // ORIGINAL CODEactorImage.attr("src", results[i].images.fixed_height.url);
 
+                  var animated = results[i].images.fixed_height.url;
+                  var still = results[i].images.fixed_height_still.url;
+
+                  actorImage.attr("src", still);
+                  actorImage.attr("data-still", still);
+                  actorImage.attr("data-animate", animated);
+                  actorImage.attr("data-state", still);
+                  actorImage.addClass("gif");
+      	  	
+                  //TRIED TO DO DRY METHOD OF ASSIGNING .ATTR BUT COULDN'T GET TO WORK
+                   //setting src attribute of images to property of result item
+      	  	// $(actorImage).attr({
+                  // src: still,                         
+                  //"data-still": still, 
+                  //"data-animate": animated, 
+                  //"data-state": "still"
+                  // });
+
+                  
       	  	//appending the image and paragraph to the div
       	  	actorDiv.append(actorImage);
       	  	actorDiv.append(p);
 
       	  	//in div with ID #actors prepend each of the images as they loop through
-
       	  	$("#actors").prepend(actorDiv);
+      	  } //for loop end
+
+                  
+                        $(document).on("click", ".gif", function() {
+                              var state = $(this).attr("data-state");
+                                                            
+                              if (state === "still") {
+                                    $(this).attr("src", $(this).data("animate"));
+                                    $(this).attr("data-state", "animate");
+                              } else {
+                                    $(this).attr("src", $(this).data("still"));
+                                    $(this).attr("data-state", "still");
+                              } //end else statement
 
 
 
-      	  }
-      	});
-      }
+                              //THIS CODE DIDN'T WORK, not sure why
+                              // if (state === "still") {
+                              //       $(this).attr("src", $(this).attr("data-animate"));
+                              //       $(this).attr("data-state", "animate");
+                              // } else {
+                              //       $(this).attr("src", $(this).attr("data-still"));
+                              //       $(this).attr("data-state", "still");
+                              // } //end else statement
+
+                        }); //.gif click function end
+
+      	}); //response function end
+      } //displayActorInfo function end
+
+                        
+      
+
       //listen for a click on the page and in element with class .actor run a function
       $(document).on("click", ".actor", displayActorInfo);
+      
